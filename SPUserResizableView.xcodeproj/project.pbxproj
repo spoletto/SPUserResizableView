@@ -1,0 +1,278 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		9C36DD3A1494491A00D3035F /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9C36DD391494491A00D3035F /* UIKit.framework */; };
+		9C36DD3C1494491A00D3035F /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9C36DD3B1494491A00D3035F /* Foundation.framework */; };
+		9C36DD3E1494491A00D3035F /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9C36DD3D1494491A00D3035F /* CoreGraphics.framework */; };
+		9C36DD441494491A00D3035F /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 9C36DD421494491A00D3035F /* InfoPlist.strings */; };
+		9C36DD461494491B00D3035F /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C36DD451494491B00D3035F /* main.m */; };
+		9C36DD4A1494491B00D3035F /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C36DD491494491B00D3035F /* AppDelegate.m */; };
+		9C36DD5414944A8F00D3035F /* SPUserResizableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C36DD5114944A8F00D3035F /* SPUserResizableView.m */; };
+		9C36DD5514944A8F00D3035F /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C36DD5314944A8F00D3035F /* ViewController.m */; };
+		9C36DD5714944F1600D3035F /* milky_way.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 9C36DD5614944F1600D3035F /* milky_way.jpg */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		9C36DD351494491A00D3035F /* SPUserResizableView.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SPUserResizableView.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		9C36DD391494491A00D3035F /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		9C36DD3B1494491A00D3035F /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		9C36DD3D1494491A00D3035F /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		9C36DD411494491A00D3035F /* SPUserResizableView-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "SPUserResizableView-Info.plist"; sourceTree = "<group>"; };
+		9C36DD431494491A00D3035F /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		9C36DD451494491B00D3035F /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		9C36DD471494491B00D3035F /* SPUserResizableView-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "SPUserResizableView-Prefix.pch"; sourceTree = "<group>"; };
+		9C36DD481494491B00D3035F /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		9C36DD491494491B00D3035F /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		9C36DD5014944A8F00D3035F /* SPUserResizableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SPUserResizableView.h; sourceTree = "<group>"; };
+		9C36DD5114944A8F00D3035F /* SPUserResizableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SPUserResizableView.m; sourceTree = "<group>"; };
+		9C36DD5214944A8F00D3035F /* ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
+		9C36DD5314944A8F00D3035F /* ViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
+		9C36DD5614944F1600D3035F /* milky_way.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = milky_way.jpg; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		9C36DD321494491A00D3035F /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9C36DD3A1494491A00D3035F /* UIKit.framework in Frameworks */,
+				9C36DD3C1494491A00D3035F /* Foundation.framework in Frameworks */,
+				9C36DD3E1494491A00D3035F /* CoreGraphics.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		9C36DD2A1494491A00D3035F = {
+			isa = PBXGroup;
+			children = (
+				9C36DD3F1494491A00D3035F /* SPUserResizableView */,
+				9C36DD381494491A00D3035F /* Frameworks */,
+				9C36DD361494491A00D3035F /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		9C36DD361494491A00D3035F /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				9C36DD351494491A00D3035F /* SPUserResizableView.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		9C36DD381494491A00D3035F /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				9C36DD391494491A00D3035F /* UIKit.framework */,
+				9C36DD3B1494491A00D3035F /* Foundation.framework */,
+				9C36DD3D1494491A00D3035F /* CoreGraphics.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		9C36DD3F1494491A00D3035F /* SPUserResizableView */ = {
+			isa = PBXGroup;
+			children = (
+				9C36DD5014944A8F00D3035F /* SPUserResizableView.h */,
+				9C36DD5114944A8F00D3035F /* SPUserResizableView.m */,
+				9C36DD5214944A8F00D3035F /* ViewController.h */,
+				9C36DD5314944A8F00D3035F /* ViewController.m */,
+				9C36DD481494491B00D3035F /* AppDelegate.h */,
+				9C36DD491494491B00D3035F /* AppDelegate.m */,
+				9C36DD401494491A00D3035F /* Supporting Files */,
+			);
+			path = SPUserResizableView;
+			sourceTree = "<group>";
+		};
+		9C36DD401494491A00D3035F /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				9C36DD5614944F1600D3035F /* milky_way.jpg */,
+				9C36DD411494491A00D3035F /* SPUserResizableView-Info.plist */,
+				9C36DD421494491A00D3035F /* InfoPlist.strings */,
+				9C36DD451494491B00D3035F /* main.m */,
+				9C36DD471494491B00D3035F /* SPUserResizableView-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		9C36DD341494491A00D3035F /* SPUserResizableView */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 9C36DD4D1494491B00D3035F /* Build configuration list for PBXNativeTarget "SPUserResizableView" */;
+			buildPhases = (
+				9C36DD311494491A00D3035F /* Sources */,
+				9C36DD321494491A00D3035F /* Frameworks */,
+				9C36DD331494491A00D3035F /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = SPUserResizableView;
+			productName = SPUserResizableView;
+			productReference = 9C36DD351494491A00D3035F /* SPUserResizableView.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		9C36DD2C1494491A00D3035F /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0420;
+				ORGANIZATIONNAME = "Brown University";
+			};
+			buildConfigurationList = 9C36DD2F1494491A00D3035F /* Build configuration list for PBXProject "SPUserResizableView" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 9C36DD2A1494491A00D3035F;
+			productRefGroup = 9C36DD361494491A00D3035F /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				9C36DD341494491A00D3035F /* SPUserResizableView */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		9C36DD331494491A00D3035F /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9C36DD441494491A00D3035F /* InfoPlist.strings in Resources */,
+				9C36DD5714944F1600D3035F /* milky_way.jpg in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		9C36DD311494491A00D3035F /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9C36DD461494491B00D3035F /* main.m in Sources */,
+				9C36DD4A1494491B00D3035F /* AppDelegate.m in Sources */,
+				9C36DD5414944A8F00D3035F /* SPUserResizableView.m in Sources */,
+				9C36DD5514944A8F00D3035F /* ViewController.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		9C36DD421494491A00D3035F /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				9C36DD431494491A00D3035F /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		9C36DD4B1494491B00D3035F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				SDKROOT = iphoneos;
+			};
+			name = Debug;
+		};
+		9C36DD4C1494491B00D3035F /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		9C36DD4E1494491B00D3035F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "SPUserResizableView/SPUserResizableView-Prefix.pch";
+				INFOPLIST_FILE = "SPUserResizableView/SPUserResizableView-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		9C36DD4F1494491B00D3035F /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "SPUserResizableView/SPUserResizableView-Prefix.pch";
+				INFOPLIST_FILE = "SPUserResizableView/SPUserResizableView-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		9C36DD2F1494491A00D3035F /* Build configuration list for PBXProject "SPUserResizableView" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				9C36DD4B1494491B00D3035F /* Debug */,
+				9C36DD4C1494491B00D3035F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		9C36DD4D1494491B00D3035F /* Build configuration list for PBXNativeTarget "SPUserResizableView" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				9C36DD4E1494491B00D3035F /* Debug */,
+				9C36DD4F1494491B00D3035F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 9C36DD2C1494491A00D3035F /* Project object */;
+}
