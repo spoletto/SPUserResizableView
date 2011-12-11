@@ -29,13 +29,13 @@ typedef struct SPUserResizableViewAnchorPoint {
     // Used to determine which components of the bounds we'll be modifying, based upon where the user's touch started.
     SPUserResizableViewAnchorPoint anchorPoint;
     
-    NSObject <SPUserResizableViewDelegate> *delegate;
+    id <SPUserResizableViewDelegate> delegate;
 }
 
-@property (nonatomic, assign) NSObject <SPUserResizableViewDelegate> *delegate;
+@property (nonatomic, assign) id <SPUserResizableViewDelegate> delegate;
 
-// Will be retained and added as a subview.
-@property (nonatomic, retain) UIView *contentView;
+// Will be retained as a subview.
+@property (nonatomic, assign) UIView *contentView;
 
 // Default is 48.0 for each.
 @property (nonatomic) CGFloat minWidth;
@@ -55,7 +55,7 @@ typedef struct SPUserResizableViewAnchorPoint {
 // Called when the resizable view receives touchesBegan: and activates the editing handles.
 - (void)userResizableViewDidBeginEditing:(SPUserResizableView *)userResizableView;
 
-// Called when the resizable view receives touchesEnded:
+// Called when the resizable view receives touchesEnded: or touchesCancelled:
 - (void)userResizableViewDidEndEditing:(SPUserResizableView *)userResizableView;
 
 @end
