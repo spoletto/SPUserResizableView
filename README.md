@@ -22,7 +22,6 @@ You'll need to #import the SPUserResizableView.h header and construct a new inst
 
     ...
     
-
     - (void)viewDidLoad {
         CGRect frame = CGRectMake(50, 50, 200, 150);
         SPUserResizableView *userResizableView = [[SPUserResizableView alloc] initWithFrame:frame];
