@@ -21,6 +21,9 @@
     [contentView setBackgroundColor:[UIColor redColor]];
     userResizableView.contentView = contentView;
     userResizableView.delegate = self;
+    [userResizableView showEditingHandles];
+    currentlyEditingView = userResizableView;
+    lastEditedView = userResizableView;
     [self.view addSubview:userResizableView];
     [contentView release]; [userResizableView release];
     

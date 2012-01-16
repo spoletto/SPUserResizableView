@@ -45,6 +45,7 @@ typedef struct SPUserResizableViewAnchorPoint {
 @property (nonatomic) BOOL preventsPositionOutsideSuperview;
 
 - (void)hideEditingHandles;
+- (void)showEditingHandles;
 
 @end
 

@@ -8,8 +8,8 @@
 #import "SPUserResizableView.h"
 
 /* Let's inset everything that's drawn (the handles and the content view)
-   so that users can trigger a resize from a few pixels outside of
-   what they actually see as the bounding box. */
+ so that users can trigger a resize from a few pixels outside of
+ what they actually see as the bounding box. */
 #define kSPUserResizableViewGlobalInset 5.0
 
 #define kSPUserResizableViewDefaultMinWidth 48.0
@@ -184,8 +184,15 @@ typedef struct CGPointSPUserResizableViewAnchorPointPair {
     }
     
     [borderView setHidden:NO];
-    touchStart = [[touches anyObject] locationInView:self];
-    anchorPoint = [self anchorPointForTouchLocation:touchStart];
+    UITouch *touch = [touches anyObject];
+    anchorPoint = [self anchorPointForTouchLocation:[touch locationInView:self]];
+    
+    // When resizing, all calculations are done in the superview's coordinate space.
+    touchStart = [touch locationInView:self.superview];
+    if (![self isResizing]) {
+        // When translating, all calculations are done in the view's coordinate space.
+        touchStart = [touch locationInView:self];
+    }
 }
 
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
@@ -202,24 +209,37 @@ typedef struct CGPointSPUserResizableViewAnchorPointPair {
     }
 }
 
+- (void)showEditingHandles {
+    [borderView setHidden:NO];
+}
+
 - (void)hideEditingHandles {
     [borderView setHidden:YES];
 }
 
 - (void)resizeUsingTouchLocation:(CGPoint)touchPoint {
-    // (1) Calculate the deltas using the current anchor point.
+    // (1) Update the touch point if we're outside the superview.
+    if (self.preventsPositionOutsideSuperview) {
+        CGFloat border = kSPUserResizableViewGlobalInset + kSPUserResizableViewInteractiveBorderSize/2;
+        if (touchPoint.x < border) {
+            touchPoint.x = border;
+        }
+        if (touchPoint.x > self.superview.bounds.size.width - border) {
+            touchPoint.x = self.superview.bounds.size.width - border;
+        }
+        if (touchPoint.y < border) {
+            touchPoint.y = border;
+        }
+        if (touchPoint.y > self.superview.bounds.size.height - border) {
+            touchPoint.y = self.superview.bounds.size.height - border;
+        }
+    }
+    
+    // (2) Calculate the deltas using the current anchor point.
     CGFloat deltaW = anchorPoint.adjustsW * (touchStart.x - touchPoint.x);
     CGFloat deltaX = anchorPoint.adjustsX * (-1.0 * deltaW);
     CGFloat deltaH = anchorPoint.adjustsH * (touchPoint.y - touchStart.y);
     CGFloat deltaY = anchorPoint.adjustsY * (-1.0 * deltaH);
-        
-    // (2) Update the 'touchStart' reference point if needed.
-    if (anchorPoint.adjustsW < 0) {
-        touchStart.x = touchPoint.x;
-    }
-    if (anchorPoint.adjustsH > 0) {
-        touchStart.y = touchPoint.y;
-    }
     
     // (3) Calculate the new frame.
     CGFloat newX = self.frame.origin.x + deltaX;
@@ -237,7 +257,30 @@ typedef struct CGPointSPUserResizableViewAnchorPointPair {
         newY = self.frame.origin.y;
     }
     
+    // (5) Ensure the resize won't cause the view to move offscreen.
+    if (self.preventsPositionOutsideSuperview) {
+        if (newX < self.superview.bounds.origin.x) {
+            // Calculate how much to grow the width by such that the new X coordintae will align with the superview.
+            deltaW = self.frame.origin.x - self.superview.bounds.origin.x;
+            newWidth = self.frame.size.width + deltaW;
+            newX = self.superview.bounds.origin.x;
+        }
+        if (newX + newWidth > self.superview.bounds.origin.x + self.superview.bounds.size.width) {
+            newWidth = self.superview.bounds.size.width - newX;
+        }
+        if (newY < self.superview.bounds.origin.y) {
+            // Calculate how much to grow the height by such that the new Y coordintae will align with the superview.
+            deltaH = self.frame.origin.y - self.superview.bounds.origin.y;
+            newHeight = self.frame.size.height + deltaH;
+            newY = self.superview.bounds.origin.y;
+        }
+        if (newY + newHeight > self.superview.bounds.origin.y + self.superview.bounds.size.height) {
+            newHeight = self.superview.bounds.size.height - newY;
+        }
+    }
+    
     self.frame = CGRectMake(newX, newY, newWidth, newHeight);
+    touchStart = touchPoint;
 }
 
 - (void)translateUsingTouchLocation:(CGPoint)touchPoint {
@@ -263,11 +306,10 @@ typedef struct CGPointSPUserResizableViewAnchorPointPair {
 }
 
 - (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event {
-    CGPoint touchPoint = [[touches anyObject] locationInView:self];
     if ([self isResizing]) {
-        [self resizeUsingTouchLocation:touchPoint];
+        [self resizeUsingTouchLocation:[[touches anyObject] locationInView:self.superview]];
     } else {
-        [self translateUsingTouchLocation:touchPoint];
+        [self translateUsingTouchLocation:[[touches anyObject] locationInView:self]];
     }
 }
 
