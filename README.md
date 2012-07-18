@@ -5,7 +5,7 @@ SPUserResizableView is a user-resizable, user-repositionable UIView subclass. It
 
 Screenshot
 ----
-![SPUserResizableView](https://github.com/spoletto/SPUserResizableView/raw/master/screenshot.png)
+![SPUserResizableView](http://i.imgur.com/krBjw.png)
 
 How To Use It
 -------------
