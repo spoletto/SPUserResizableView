@@ -15,6 +15,7 @@
 #define kSPUserResizableViewDefaultMinWidth 48.0
 #define kSPUserResizableViewDefaultMinHeight 48.0
 #define kSPUserResizableViewInteractiveBorderSize 10.0
+#define kSPUserResizableViewLongpressThreshold 1.0
 
 static SPUserResizableViewAnchorPoint SPUserResizableViewNoResizeAnchorPoint = { 0.0, 0.0, 0.0, 0.0 };
 static SPUserResizableViewAnchorPoint SPUserResizableViewUpperLeftAnchorPoint = { 1.0, 1.0, -1.0, 1.0 };
@@ -193,9 +194,19 @@ typedef struct CGPointSPUserResizableViewAnchorPointPair {
         // When translating, all calculations are done in the view's coordinate space.
         touchStart = [touch locationInView:self];
     }
+    
+    // To request long press event
+    [self performSelector:@selector(touchesLongPressed)
+               withObject:nil
+               afterDelay:kSPUserResizableViewLongpressThreshold];
 }
 
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
+    // To cancel long press perform request
+    [NSObject cancelPreviousPerformRequestsWithTarget:self
+                                             selector:@selector(touchesLongPressed)
+                                               object:nil];
+    
     // Notify the delegate we've ended our editing session.
     if (self.delegate && [self.delegate respondsToSelector:@selector(userResizableViewDidEndEditing:)]) {
         [self.delegate userResizableViewDidEndEditing:self];
@@ -203,9 +214,21 @@ typedef struct CGPointSPUserResizableViewAnchorPointPair {
 }
 
 - (void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event {
+    // To cancel long press perform request
+    [NSObject cancelPreviousPerformRequestsWithTarget:self
+                                             selector:@selector(touchesLongPressed)
+                                               object:nil];
+    
     // Notify the delegate we've ended our editing session.
     if (self.delegate && [self.delegate respondsToSelector:@selector(userResizableViewDidEndEditing:)]) {
         [self.delegate userResizableViewDidEndEditing:self];
+    }
+}
+
+- (void)touchesLongPressed {
+    if (self.delegate && [self.delegate respondsToSelector:@selector(
+        userResizableViewDidLongPress:)]) {
+        [self.delegate userResizableViewDidLongPress:self];
     }
 }
 
@@ -306,6 +329,11 @@ typedef struct CGPointSPUserResizableViewAnchorPointPair {
 }
 
 - (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event {
+    // To cancel long press perform request
+    [NSObject cancelPreviousPerformRequestsWithTarget:self
+                                             selector:@selector(touchesLongPressed)
+                                               object:nil];
+    
     if ([self isResizing]) {
         [self resizeUsingTouchLocation:[[touches anyObject] locationInView:self.superview]];
     } else {

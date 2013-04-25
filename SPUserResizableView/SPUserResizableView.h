@@ -59,4 +59,7 @@ typedef struct SPUserResizableViewAnchorPoint {
 // Called when the resizable view receives touchesEnded: or touchesCancelled:
 - (void)userResizableViewDidEndEditing:(SPUserResizableView *)userResizableView;
 
+// Called when the resizable view receives touchesBegan: and activates the editing handles.
+- (void)userResizableViewDidLongPress:(SPUserResizableView *)userResizableView;
+
 @end
