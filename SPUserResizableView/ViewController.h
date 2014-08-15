@@ -11,6 +11,19 @@
 @interface ViewController : UIViewController <UIGestureRecognizerDelegate, SPUserResizableViewDelegate> {
     SPUserResizableView *currentlyEditingView;
     SPUserResizableView *lastEditedView;
+    
+    /**
+     *  Pinch lastScale
+     */
+    CGFloat lastScale;
+    
+    /**
+     *  Rotate lastRotation
+     */
+    CGFloat lastRotation;
 }
+
+- (void)handlePinchGesture:(UIPinchGestureRecognizer *)gestureRecognizer;
+- (void)handleRotateGesture:(UIRotationGestureRecognizer*)sender;
 
 @end

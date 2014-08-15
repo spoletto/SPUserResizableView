@@ -92,6 +92,30 @@ static SPUserResizableViewAnchorPoint SPUserResizableViewLowerMiddleAnchorPoint 
 
 @end
 
+@interface SPUserResizableView ()
+
+- (void)translateUsingTouchLocation:(CGPoint)touchPoint;
+
+/**
+ *  Used for moving anchorPoint without loosing current position. Works with transform
+ *  @author http://stackoverflow.com/a/5666430/740949
+ *
+ *  @param anchor CGPoint for new anchor
+ *  @param view
+ */
+-(void)setAnchorPoint:(CGPoint)anchor;
+
+/**
+ *  Determines if we should not resize the by current settings.
+ *
+ *  @param touches
+ *
+ *  @return BOOL
+ */
+- (BOOL)isDisabledForTouches:(NSSet*)touches;
+
+@end
+
 @implementation SPUserResizableView
 
 @synthesize contentView, minWidth, minHeight, preventsPositionOutsideSuperview, delegate;
@@ -177,7 +201,18 @@ typedef struct CGPointSPUserResizableViewAnchorPointPair {
     return (anchorPoint.adjustsH || anchorPoint.adjustsW || anchorPoint.adjustsX || anchorPoint.adjustsY);
 }
 
+- (BOOL)isDisabledForTouches:(NSSet*)touches {
+    return ([self disable] || ([self disableOnMultiTouch] && [touches count] > 1));
+}
+
+
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
+    if ([self isDisabledForTouches:touches]) {
+        return;
+    }
+    
+    m_originalAnchorPoint    = [[self layer] anchorPoint];
+    
     // Notify the delegate we've begun our editing session.
     if (self.delegate && [self.delegate respondsToSelector:@selector(userResizableViewDidBeginEditing:)]) {
         [self.delegate userResizableViewDidBeginEditing:self];
@@ -196,6 +231,9 @@ typedef struct CGPointSPUserResizableViewAnchorPointPair {
 }
 
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
+    
+    [self setAnchorPoint:m_originalAnchorPoint];
+    
     // Notify the delegate we've ended our editing session.
     if (self.delegate && [self.delegate respondsToSelector:@selector(userResizableViewDidEndEditing:)]) {
         [self.delegate userResizableViewDidEndEditing:self];
@@ -203,6 +241,9 @@ typedef struct CGPointSPUserResizableViewAnchorPointPair {
 }
 
 - (void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event {
+
+    [self setAnchorPoint:m_originalAnchorPoint];
+    
     // Notify the delegate we've ended our editing session.
     if (self.delegate && [self.delegate respondsToSelector:@selector(userResizableViewDidEndEditing:)]) {
         [self.delegate userResizableViewDidEndEditing:self];
@@ -218,7 +259,37 @@ typedef struct CGPointSPUserResizableViewAnchorPointPair {
 }
 
 - (void)resizeUsingTouchLocation:(CGPoint)touchPoint {
+    if ([self disable]) {
+        return;
+    }
+    
+    // save current rotation and scales
+    CGFloat scaleX      = [[self valueForKeyPath:@"layer.transform.scale.x"] floatValue];
+    CGFloat scaleY      = [[self valueForKeyPath:@"layer.transform.scale.y"] floatValue];
+    CGFloat rotation    = [[self valueForKeyPath:@"layer.transform.rotation"] floatValue];
+    
+    // update current anchor point to update frane with transform
+    
+    CGPoint point;
+    if (anchorPoint.adjustsY != 0) {
+        if (anchorPoint.adjustsW != 0 && anchorPoint.adjustsX == 0) {
+            point   = CGPointMake(0, 1);
+        } else {
+            point = CGPointMake(1, 1);
+        }
+    } else if (anchorPoint.adjustsX != 0) {
+        point   = CGPointMake(1, 0);
+    } else {
+        point   = CGPointMake(0, 0);
+    }
+    
+    [self setAnchorPoint:point];
+    
+    // restore to normal cords
+    [self setTransform:CGAffineTransformIdentity];
+    
     // (1) Update the touch point if we're outside the superview.
+    
     if (self.preventsPositionOutsideSuperview) {
         CGFloat border = kSPUserResizableViewGlobalInset + kSPUserResizableViewInteractiveBorderSize/2;
         if (touchPoint.x < border) {
@@ -236,9 +307,9 @@ typedef struct CGPointSPUserResizableViewAnchorPointPair {
     }
     
     // (2) Calculate the deltas using the current anchor point.
-    CGFloat deltaW = anchorPoint.adjustsW * (touchStart.x - touchPoint.x);
+    CGFloat deltaW = anchorPoint.adjustsW * (touchStart.x - touchPoint.x) / scaleX;
     CGFloat deltaX = anchorPoint.adjustsX * (-1.0 * deltaW);
-    CGFloat deltaH = anchorPoint.adjustsH * (touchPoint.y - touchStart.y);
+    CGFloat deltaH = anchorPoint.adjustsH * (touchPoint.y - touchStart.y) / scaleY;
     CGFloat deltaY = anchorPoint.adjustsY * (-1.0 * deltaH);
     
     // (3) Calculate the new frame.
@@ -279,11 +350,24 @@ typedef struct CGPointSPUserResizableViewAnchorPointPair {
         }
     }
     
+    // update the frame
     self.frame = CGRectMake(newX, newY, newWidth, newHeight);
+    
+    if ([self delegate] && [[self delegate] respondsToSelector:@selector(userResizableViewNewRealFrame:)]) {
+        [[self delegate] userResizableViewNewRealFrame:self];
+    }
+    
+    // resotre the transform
+    CGAffineTransform transform     = CGAffineTransformMakeRotation(rotation);
+    
+    [self setTransform:CGAffineTransformScale(transform, scaleX, scaleY)];
+
+    
     touchStart = touchPoint;
 }
 
 - (void)translateUsingTouchLocation:(CGPoint)touchPoint {
+    [self setAnchorPoint:CGPointMake(0.5, 0.5)];
     CGPoint newCenter = CGPointMake(self.center.x + touchPoint.x - touchStart.x, self.center.y + touchPoint.y - touchStart.y);
     if (self.preventsPositionOutsideSuperview) {
         // Ensure the translation won't cause the view to move offscreen.
@@ -305,18 +389,40 @@ typedef struct CGPointSPUserResizableViewAnchorPointPair {
     self.center = newCenter;
 }
 
+-(void)setAnchorPoint:(CGPoint)anchor {
+    CGPoint newPoint = CGPointMake(self.bounds.size.width * anchor.x,
+                                   self.bounds.size.height * anchor.y);
+    CGPoint oldPoint = CGPointMake(self.bounds.size.width * self.layer.anchorPoint.x,
+                                   self.bounds.size.height * self.layer.anchorPoint.y);
+    
+    newPoint = CGPointApplyAffineTransform(newPoint, self.transform);
+    oldPoint = CGPointApplyAffineTransform(oldPoint, self.transform);
+    
+    CGPoint position = self.layer.position;
+    
+    position.x -= oldPoint.x;
+    position.x += newPoint.x;
+    
+    position.y -= oldPoint.y;
+    position.y += newPoint.y;
+    
+    self.layer.position = position;
+    self.layer.anchorPoint = anchor;
+}
+
 - (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event {
-    if ([self isResizing]) {
-        [self resizeUsingTouchLocation:[[touches anyObject] locationInView:self.superview]];
-    } else {
-        [self translateUsingTouchLocation:[[touches anyObject] locationInView:self]];
+    // is disabled or there are more touches
+    if (![self isDisabledForTouches:touches]) {
+        if ([self isResizing]) {
+            [self resizeUsingTouchLocation:[[touches anyObject] locationInView:self.superview]];
+        } else if (![self disablePan]){
+            [self translateUsingTouchLocation:[[touches anyObject] locationInView:self]];
+        }
     }
 }
 
 - (void)dealloc {
     [contentView removeFromSuperview];
-    [borderView release];
-    [super dealloc];
 }
 
 @end

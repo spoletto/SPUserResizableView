@@ -13,9 +13,9 @@
 		9C36DD441494491A00D3035F /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 9C36DD421494491A00D3035F /* InfoPlist.strings */; };
 		9C36DD461494491B00D3035F /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C36DD451494491B00D3035F /* main.m */; };
 		9C36DD4A1494491B00D3035F /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C36DD491494491B00D3035F /* AppDelegate.m */; };
-		9C36DD5414944A8F00D3035F /* SPUserResizableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C36DD5114944A8F00D3035F /* SPUserResizableView.m */; };
 		9C36DD5514944A8F00D3035F /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C36DD5314944A8F00D3035F /* ViewController.m */; };
 		9C36DD5714944F1600D3035F /* milky_way.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 9C36DD5614944F1600D3035F /* milky_way.jpg */; };
+		B09F23FA199EA6C100A10972 /* SPUserResizableView.m in Sources */ = {isa = PBXBuildFile; fileRef = B09F23F9199EA6C100A10972 /* SPUserResizableView.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -29,11 +29,11 @@
 		9C36DD471494491B00D3035F /* SPUserResizableView-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "SPUserResizableView-Prefix.pch"; sourceTree = "<group>"; };
 		9C36DD481494491B00D3035F /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		9C36DD491494491B00D3035F /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
-		9C36DD5014944A8F00D3035F /* SPUserResizableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SPUserResizableView.h; sourceTree = "<group>"; };
-		9C36DD5114944A8F00D3035F /* SPUserResizableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SPUserResizableView.m; sourceTree = "<group>"; };
 		9C36DD5214944A8F00D3035F /* ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
 		9C36DD5314944A8F00D3035F /* ViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
 		9C36DD5614944F1600D3035F /* milky_way.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = milky_way.jpg; sourceTree = "<group>"; };
+		B09F23F8199EA6C100A10972 /* SPUserResizableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SPUserResizableView.h; sourceTree = "<group>"; };
+		B09F23F9199EA6C100A10972 /* SPUserResizableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SPUserResizableView.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -80,8 +80,8 @@
 		9C36DD3F1494491A00D3035F /* SPUserResizableView */ = {
 			isa = PBXGroup;
 			children = (
-				9C36DD5014944A8F00D3035F /* SPUserResizableView.h */,
-				9C36DD5114944A8F00D3035F /* SPUserResizableView.m */,
+				B09F23F8199EA6C100A10972 /* SPUserResizableView.h */,
+				B09F23F9199EA6C100A10972 /* SPUserResizableView.m */,
 				9C36DD5214944A8F00D3035F /* ViewController.h */,
 				9C36DD5314944A8F00D3035F /* ViewController.m */,
 				9C36DD481494491B00D3035F /* AppDelegate.h */,
@@ -168,7 +168,7 @@
 			files = (
 				9C36DD461494491B00D3035F /* main.m in Sources */,
 				9C36DD4A1494491B00D3035F /* AppDelegate.m in Sources */,
-				9C36DD5414944A8F00D3035F /* SPUserResizableView.m in Sources */,
+				B09F23FA199EA6C100A10972 /* SPUserResizableView.m in Sources */,
 				9C36DD5514944A8F00D3035F /* ViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -271,6 +271,7 @@
 				9C36DD4F1494491B00D3035F /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
