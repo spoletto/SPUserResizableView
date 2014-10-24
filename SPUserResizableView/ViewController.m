@@ -27,11 +27,12 @@
     [self.view addSubview:userResizableView];
     
     // (2) Create a second resizable view with a UIImageView as the content.
-    CGRect imageFrame = CGRectMake(50, 200, 200, 200);
+    CGRect imageFrame = CGRectMake(200, 200, 200, 200);
     SPUserResizableView *imageResizableView = [[SPUserResizableView alloc] initWithFrame:imageFrame];
     UIImageView *imageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"milky_way.jpg"]];
     imageResizableView.contentView = imageView;
     imageResizableView.delegate = self;
+    imageResizableView.disablePan   = YES;
     
     [imageResizableView setTransform:CGAffineTransformMakeRotation(0.1)];
     

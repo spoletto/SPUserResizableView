@@ -6,6 +6,7 @@
 //
 
 #import "SPUserResizableView.h"
+#define RADIANS_TO_DEGREES(radians) ((radians) * (180.0 / M_PI))
 
 /* Let's inset everything that's drawn (the handles and the content view)
    so that users can trigger a resize from a few pixels outside of
@@ -173,6 +174,8 @@ typedef struct CGPointSPUserResizableViewAnchorPointPair {
 } CGPointSPUserResizableViewAnchorPointPair;
 
 - (SPUserResizableViewAnchorPoint)anchorPointForTouchLocation:(CGPoint)touchPoint {
+    
+    
     // (1) Calculate the positions of each of the anchor points.
     CGPointSPUserResizableViewAnchorPointPair upperLeft = { CGPointMake(0.0, 0.0), SPUserResizableViewUpperLeftAnchorPoint };
     CGPointSPUserResizableViewAnchorPointPair upperMiddle = { CGPointMake(self.bounds.size.width/2, 0.0), SPUserResizableViewUpperMiddleAnchorPoint };
@@ -220,6 +223,7 @@ typedef struct CGPointSPUserResizableViewAnchorPointPair {
     
     [borderView setHidden:NO];
     UITouch *touch = [touches anyObject];
+    
     anchorPoint = [self anchorPointForTouchLocation:[touch locationInView:self]];
     
     // When resizing, all calculations are done in the superview's coordinate space.
@@ -263,6 +267,7 @@ typedef struct CGPointSPUserResizableViewAnchorPointPair {
         return;
     }
     
+    NSLog(@"Touch point %@",NSStringFromCGPoint(touchPoint));
     // save current rotation and scales
     CGFloat scaleX      = [[self valueForKeyPath:@"layer.transform.scale.x"] floatValue];
     CGFloat scaleY      = [[self valueForKeyPath:@"layer.transform.scale.y"] floatValue];
@@ -270,7 +275,14 @@ typedef struct CGPointSPUserResizableViewAnchorPointPair {
     
     // update current anchor point to update frane with transform
     
+    //NSLog(@"H %f, W %f, X %f, Y %f", anchorPoint.adjustsH, anchorPoint.adjustsW, anchorPoint.adjustsX, anchorPoint.adjustsY);
+    
+    
+    NSLog(@"Rotation %f",RADIANS_TO_DEGREES(rotation));
+    
+    
     CGPoint point;
+    
     if (anchorPoint.adjustsY != 0) {
         if (anchorPoint.adjustsW != 0 && anchorPoint.adjustsX == 0) {
             point   = CGPointMake(0, 1);
@@ -282,6 +294,7 @@ typedef struct CGPointSPUserResizableViewAnchorPointPair {
     } else {
         point   = CGPointMake(0, 0);
     }
+    
     
     [self setAnchorPoint:point];
     
@@ -307,29 +320,58 @@ typedef struct CGPointSPUserResizableViewAnchorPointPair {
     }
     
     // (2) Calculate the deltas using the current anchor point.
-    CGFloat deltaW = anchorPoint.adjustsW * (touchStart.x - touchPoint.x) / scaleX;
+    
+    CGPoint start   = touchStart;
+    CGPoint end     = touchPoint;
+    
+    float rotationDeg   = RADIANS_TO_DEGREES(rotation);
+    
+    if (rotationDeg > 45.0 && rotationDeg < 135.0) {
+        
+        start.x     = touchStart.y;
+        start.y     = touchPoint.x;
+        
+        end.x     = touchPoint.y;
+        end.y     = touchStart.x;
+    } else if (-45.0 > rotationDeg && rotationDeg > -135.0) {
+        start.x     = touchPoint.y;
+        start.y     = touchStart.x;
+        
+        end.x     = touchStart.y;
+        end.y     = touchPoint.x;
+    //} else if (-135.0 > rotationDeg) {
+       
+    } else if (rotationDeg > 135.0 || -135.0 > rotationDeg) {
+        start   = touchPoint;
+        end     = touchStart;
+    }
+    
+
+    
+    CGFloat deltaW = anchorPoint.adjustsW * (start.x - end.x) / scaleX;
     CGFloat deltaX = anchorPoint.adjustsX * (-1.0 * deltaW);
-    CGFloat deltaH = anchorPoint.adjustsH * (touchPoint.y - touchStart.y) / scaleY;
+    CGFloat deltaH = anchorPoint.adjustsH * (end.y - start.y) / scaleY;
     CGFloat deltaY = anchorPoint.adjustsY * (-1.0 * deltaH);
     
     // (3) Calculate the new frame.
     CGFloat newX = self.frame.origin.x + deltaX;
     CGFloat newY = self.frame.origin.y + deltaY;
-    CGFloat newWidth = self.frame.size.width + deltaW;
-    CGFloat newHeight = self.frame.size.height + deltaH;
+    CGFloat newWidth = self.bounds.size.width + deltaW;
+    CGFloat newHeight = self.bounds.size.height + deltaH;
     
     // (4) If the new frame is too small, cancel the changes.
     if (newWidth < self.minWidth) {
-        newWidth = self.frame.size.width;
+        newWidth = self.bounds.size.width;
         newX = self.frame.origin.x;
     }
     if (newHeight < self.minHeight) {
-        newHeight = self.frame.size.height;
+        newHeight = self.bounds.size.height;
         newY = self.frame.origin.y;
     }
     
     // (5) Ensure the resize won't cause the view to move offscreen.
     if (self.preventsPositionOutsideSuperview) {
+        /*
         if (newX < self.superview.bounds.origin.x) {
             // Calculate how much to grow the width by such that the new X coordintae will align with the superview.
             deltaW = self.frame.origin.x - self.superview.bounds.origin.x;
@@ -341,13 +383,13 @@ typedef struct CGPointSPUserResizableViewAnchorPointPair {
         }
         if (newY < self.superview.bounds.origin.y) {
             // Calculate how much to grow the height by such that the new Y coordintae will align with the superview.
-            deltaH = self.frame.origin.y - self.superview.bounds.origin.y;
+            deltaH = self.bounds.origin.y - self.superview.bounds.origin.y;
             newHeight = self.frame.size.height + deltaH;
             newY = self.superview.bounds.origin.y;
         }
         if (newY + newHeight > self.superview.bounds.origin.y + self.superview.bounds.size.height) {
             newHeight = self.superview.bounds.size.height - newY;
-        }
+        }*/
     }
     
     // update the frame
@@ -356,19 +398,20 @@ typedef struct CGPointSPUserResizableViewAnchorPointPair {
     if ([self delegate] && [[self delegate] respondsToSelector:@selector(userResizableViewNewRealFrame:)]) {
         [[self delegate] userResizableViewNewRealFrame:self];
     }
-    
     // resotre the transform
     CGAffineTransform transform     = CGAffineTransformMakeRotation(rotation);
     
     [self setTransform:CGAffineTransformScale(transform, scaleX, scaleY)];
-
+    
     
     touchStart = touchPoint;
 }
 
 - (void)translateUsingTouchLocation:(CGPoint)touchPoint {
     [self setAnchorPoint:CGPointMake(0.5, 0.5)];
+    
     CGPoint newCenter = CGPointMake(self.center.x + touchPoint.x - touchStart.x, self.center.y + touchPoint.y - touchStart.y);
+    
     if (self.preventsPositionOutsideSuperview) {
         // Ensure the translation won't cause the view to move offscreen.
         CGFloat midPointX = CGRectGetMidX(self.bounds);
