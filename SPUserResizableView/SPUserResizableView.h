@@ -9,6 +9,15 @@
 
 #import <Foundation/Foundation.h>
 
+/* Let's inset everything that's drawn (the handles and the content view)
+ so that users can trigger a resize from a few pixels outside of
+ what they actually see as the bounding box. */
+#define kSPUserResizableViewGlobalInset 5.0
+
+#define kSPUserResizableViewDefaultMinWidth 48.0
+#define kSPUserResizableViewDefaultMinHeight 48.0
+#define kSPUserResizableViewInteractiveBorderSize 10.0
+
 typedef struct SPUserResizableViewAnchorPoint {
     CGFloat adjustsX;
     CGFloat adjustsY;
@@ -36,6 +45,7 @@ typedef struct SPUserResizableViewAnchorPoint {
      *  anchor point.
      */
     CGPoint m_originalAnchorPoint;
+    
 }
 
 @property (nonatomic, weak) id <SPUserResizableViewDelegate> delegate;
@@ -76,6 +86,16 @@ typedef struct SPUserResizableViewAnchorPoint {
  *  @default NO
  */
 @property (nonatomic) BOOL disablePan;
+
+/**
+ *  Defines the insent of the content.
+ *  Larger == better detection
+ */
+@property (nonatomic) float resizableInset;
+/**
+ *  Interactive border size
+ */
+@property (nonatomic) float interactiveBorderSize;
 
 /**
  *  Hide editing handles
