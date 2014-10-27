@@ -184,6 +184,7 @@ static SPUserResizableViewAnchorPoint SPUserResizableViewLowerMiddleAnchorPoint 
     // Ensure the border view is always on top by removing it and adding it to the end of the subview list.
     [borderView removeFromSuperview];
     [self addSubview:borderView];
+    [self setFrame:[self frame]];
 }
 
 - (void)setFrame:(CGRect)newFrame {
@@ -464,8 +465,9 @@ typedef struct CGPointSPUserResizableViewAnchorPointPair {
     
     CGPoint newCenter = CGPointMake(self.center.x + touchPoint.x - touchStart.x, self.center.y + touchPoint.y - touchStart.y);
     
-    if (self.preventsPositionOutsideSuperview) {
+    if (self.preventsPositionOutsideSuperview) {/*
         // Ensure the translation won't cause the view to move offscreen.
+        
         CGFloat midPointX = CGRectGetMidX(self.bounds);
         if (newCenter.x > self.superview.bounds.size.width - midPointX) {
             newCenter.x = self.superview.bounds.size.width - midPointX;
@@ -479,7 +481,7 @@ typedef struct CGPointSPUserResizableViewAnchorPointPair {
         }
         if (newCenter.y < midPointY) {
             newCenter.y = midPointY;
-        }
+        }*/
     }
     self.center = newCenter;
 }
@@ -510,8 +512,10 @@ typedef struct CGPointSPUserResizableViewAnchorPointPair {
     if (![self isDisabledForTouches:touches]) {
         CGPoint point    = [[touches anyObject] locationInView:self.superview];
         
-        if ([self isResizing] && [touches count] == 1 && [self willResize:point]) {
-            [self resizeUsingTouchLocation:point];
+        if ([self isResizing] && [touches count] == 1) {
+            if ([self willResize:point]) {
+                [self resizeUsingTouchLocation:point];
+            }
         } else if (![self disablePan]){
             [self translateUsingTouchLocation:[[touches anyObject] locationInView:self]];
         }
