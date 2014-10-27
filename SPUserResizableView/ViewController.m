@@ -39,7 +39,7 @@
     
     imageResizableView.contentView = imageView;
     imageResizableView.delegate = self;
-    imageResizableView.disablePan   = YES;
+    imageResizableView.disablePan   = NO;
     
     [imageResizableView setTransform:CGAffineTransformMakeRotation(0.1)];
     

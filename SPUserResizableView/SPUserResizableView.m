@@ -56,8 +56,8 @@ static SPUserResizableViewAnchorPoint SPUserResizableViewLowerMiddleAnchorPoint 
     CGRect middleRight = CGRectMake(self.bounds.size.width - [self interactiveBorderSize], (self.bounds.size.height - [self interactiveBorderSize])/2, [self interactiveBorderSize], [self interactiveBorderSize]);
     
     // (3) Create the gradient to paint the anchor points.
-    CGFloat colors [] = { 
-        0.4, 0.8, 1.0, 1.0, 
+    CGFloat colors [] = {
+        0.4, 0.8, 1.0, 1.0,
         0.0, 0.0, 1.0, 1.0
     };
     CGColorSpaceRef baseSpace = CGColorSpaceCreateDeviceRGB();
@@ -109,6 +109,13 @@ static SPUserResizableViewAnchorPoint SPUserResizableViewLowerMiddleAnchorPoint 
  *  @return BOOL
  */
 - (BOOL)isDisabledForTouches:(NSSet*)touches;
+
+/**
+ *  Checks if user did change the view
+ *
+ *  @return BOOL
+ */
+- (BOOL)willResize:(CGPoint)point;
 
 @end
 
@@ -182,9 +189,11 @@ static SPUserResizableViewAnchorPoint SPUserResizableViewLowerMiddleAnchorPoint 
 - (void)setFrame:(CGRect)newFrame {
     [super setFrame:newFrame];
     
-    contentView.frame = CGRectInset(self.bounds, [self resizableInset] + [self interactiveBorderSize]/2, [self resizableInset] + [self interactiveBorderSize]/2);
-    borderView.frame = CGRectInset(self.bounds, [self resizableInset], [self resizableInset]);
-    [borderView setNeedsDisplay];
+    if (contentView) {
+        contentView.frame = CGRectInset(self.bounds, [self resizableInset] + [self interactiveBorderSize]/2, [self resizableInset] + [self interactiveBorderSize]/2);
+        borderView.frame = CGRectInset(self.bounds, [self resizableInset], [self resizableInset]);
+        [borderView setNeedsDisplay];
+    }
 }
 
 static CGFloat SPDistanceBetweenTwoPoints(CGPoint point1, CGPoint point2) {
@@ -217,7 +226,7 @@ typedef struct CGPointSPUserResizableViewAnchorPointPair {
     CGFloat smallestDistance = MAXFLOAT; CGPointSPUserResizableViewAnchorPointPair closestPoint = centerPoint;
     for (NSInteger i = 0; i < 9; i++) {
         CGFloat distance = SPDistanceBetweenTwoPoints(touchPoint, allPoints[i].point);
-        if (distance < smallestDistance) { 
+        if (distance < smallestDistance) {
             closestPoint = allPoints[i];
             smallestDistance = distance;
         }
@@ -242,13 +251,17 @@ typedef struct CGPointSPUserResizableViewAnchorPointPair {
     return ([self disable] || ([self disableOnMultiTouch] && [touches count] > 1));
 }
 
+- (BOOL)willResize:(CGPoint)point {
+    // dermine if we will make resize
+    return [self isResizing] && (point.x != touchStart.x && point.y != touchStart.y);
+}
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
     if ([self isDisabledForTouches:touches]) {
         return;
     }
     
-    m_originalAnchorPoint    = [[self layer] anchorPoint];
+    //m_originalAnchorPoint    = [[self layer] anchorPoint];
     
     // Notify the delegate we've begun our editing session.
     if (self.delegate && [self.delegate respondsToSelector:@selector(userResizableViewDidBeginEditing:)]) {
@@ -269,8 +282,10 @@ typedef struct CGPointSPUserResizableViewAnchorPointPair {
 }
 
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
-    
-    [self setAnchorPoint:m_originalAnchorPoint];
+    if ([self isDisabledForTouches:touches]) {
+        return;
+    }
+    //[self setAnchorPoint:m_originalAnchorPoint];
     
     // Notify the delegate we've ended our editing session.
     if (self.delegate && [self.delegate respondsToSelector:@selector(userResizableViewDidEndEditing:)]) {
@@ -279,8 +294,11 @@ typedef struct CGPointSPUserResizableViewAnchorPointPair {
 }
 
 - (void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event {
-
-    [self setAnchorPoint:m_originalAnchorPoint];
+    if ([self isDisabledForTouches:touches]) {
+        return;
+    }
+    
+    //[self setAnchorPoint:m_originalAnchorPoint];
     
     // Notify the delegate we've ended our editing session.
     if (self.delegate && [self.delegate respondsToSelector:@selector(userResizableViewDidEndEditing:)]) {
@@ -373,14 +391,14 @@ typedef struct CGPointSPUserResizableViewAnchorPointPair {
         
         end.x     = touchStart.y;
         end.y     = touchPoint.x;
-    //} else if (-135.0 > rotationDeg) {
-       
+        //} else if (-135.0 > rotationDeg) {
+        
     } else if (rotationDeg > 135.0 || -135.0 > rotationDeg) {
         start   = touchPoint;
         end     = touchStart;
     }
     
-
+    
     
     CGFloat deltaW = anchorPoint.adjustsW * (start.x - end.x) / scaleX;
     CGFloat deltaX = anchorPoint.adjustsX * (-1.0 * deltaW);
@@ -395,35 +413,35 @@ typedef struct CGPointSPUserResizableViewAnchorPointPair {
     
     // (4) If the new frame is too small, cancel the changes.
     if (newWidth < self.minWidth) {
-        newWidth = self.bounds.size.width;
+        newWidth = self.minWidth;
         newX = self.frame.origin.x;
     }
     if (newHeight < self.minHeight) {
-        newHeight = self.bounds.size.height;
+        newHeight = self.minHeight;
         newY = self.frame.origin.y;
     }
     
     // (5) Ensure the resize won't cause the view to move offscreen.
     if (self.preventsPositionOutsideSuperview) {
         /*
-        if (newX < self.superview.bounds.origin.x) {
-            // Calculate how much to grow the width by such that the new X coordintae will align with the superview.
-            deltaW = self.frame.origin.x - self.superview.bounds.origin.x;
-            newWidth = self.frame.size.width + deltaW;
-            newX = self.superview.bounds.origin.x;
-        }
-        if (newX + newWidth > self.superview.bounds.origin.x + self.superview.bounds.size.width) {
-            newWidth = self.superview.bounds.size.width - newX;
-        }
-        if (newY < self.superview.bounds.origin.y) {
-            // Calculate how much to grow the height by such that the new Y coordintae will align with the superview.
-            deltaH = self.bounds.origin.y - self.superview.bounds.origin.y;
-            newHeight = self.frame.size.height + deltaH;
-            newY = self.superview.bounds.origin.y;
-        }
-        if (newY + newHeight > self.superview.bounds.origin.y + self.superview.bounds.size.height) {
-            newHeight = self.superview.bounds.size.height - newY;
-        }*/
+         if (newX < self.superview.bounds.origin.x) {
+         // Calculate how much to grow the width by such that the new X coordintae will align with the superview.
+         deltaW = self.frame.origin.x - self.superview.bounds.origin.x;
+         newWidth = self.frame.size.width + deltaW;
+         newX = self.superview.bounds.origin.x;
+         }
+         if (newX + newWidth > self.superview.bounds.origin.x + self.superview.bounds.size.width) {
+         newWidth = self.superview.bounds.size.width - newX;
+         }
+         if (newY < self.superview.bounds.origin.y) {
+         // Calculate how much to grow the height by such that the new Y coordintae will align with the superview.
+         deltaH = self.bounds.origin.y - self.superview.bounds.origin.y;
+         newHeight = self.frame.size.height + deltaH;
+         newY = self.superview.bounds.origin.y;
+         }
+         if (newY + newHeight > self.superview.bounds.origin.y + self.superview.bounds.size.height) {
+         newHeight = self.superview.bounds.size.height - newY;
+         }*/
     }
     
     // update the frame
@@ -442,7 +460,7 @@ typedef struct CGPointSPUserResizableViewAnchorPointPair {
 }
 
 - (void)translateUsingTouchLocation:(CGPoint)touchPoint {
-    [self setAnchorPoint:CGPointMake(0.5, 0.5)];
+    //[self setAnchorPoint:CGPointMake(0.5, 0.5)];
     
     CGPoint newCenter = CGPointMake(self.center.x + touchPoint.x - touchStart.x, self.center.y + touchPoint.y - touchStart.y);
     
@@ -490,8 +508,10 @@ typedef struct CGPointSPUserResizableViewAnchorPointPair {
 - (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event {
     // is disabled or there are more touches
     if (![self isDisabledForTouches:touches]) {
-        if ([self isResizing]) {
-            [self resizeUsingTouchLocation:[[touches anyObject] locationInView:self.superview]];
+        CGPoint point    = [[touches anyObject] locationInView:self.superview];
+        
+        if ([self isResizing] && [touches count] == 1 && [self willResize:point]) {
+            [self resizeUsingTouchLocation:point];
         } else if (![self disablePan]){
             [self translateUsingTouchLocation:[[touches anyObject] locationInView:self]];
         }
