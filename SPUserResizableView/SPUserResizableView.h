@@ -46,6 +46,7 @@ typedef struct SPUserResizableViewAnchorPoint {
      */
     CGPoint m_originalAnchorPoint;
     
+    BOOL didMakeChange;
 }
 
 @property (nonatomic, weak) id <SPUserResizableViewDelegate> delegate;
