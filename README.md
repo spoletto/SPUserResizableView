@@ -44,8 +44,26 @@ userResizableView.delegate = self;
 Then implement the following delegate methods.
 
 ``` objective-c
+/**
+ *  Called when the resizable view receives touchesBegan: and activates the editing handles.
+ *
+ *  @param userResizableView
+ */
 - (void)userResizableViewDidBeginEditing:(SPUserResizableView *)userResizableView;
+
+/**
+ *  Called when the resizable view receives touchesEnded: or touchesCancelled:
+ *
+ *  @param userResizableView
+ */
 - (void)userResizableViewDidEndEditing:(SPUserResizableView *)userResizableView;
+
+/**
+ *  Called when new frame was set.
+ *
+ *  @param userResizableView
+ */
+- (void)userResizableViewNewRealFrame:(SPUserResizableView *)userResizableView;
 ```
 
 By default, SPUserResizableView will show the editing handles (as seen in the screenshot above) whenever it receives a touch event. The editing handles will remain visible even after the userResizableViewDidEndEditing: message is sent. This is to provide visual feedback to the user that the view is indeed moveable and resizable. If you'd like to dismiss the editing handles, you must explicitly call -hideEditingHandles.
@@ -53,9 +71,47 @@ By default, SPUserResizableView will show the editing handles (as seen in the sc
 The SPUserResizableView is customizable using the following properties:
 
 ``` objective-c
+/**
+ *  Minimum width to let user resize
+ *  @default Default is 48.0 for each.
+ */
 @property (nonatomic) CGFloat minWidth;
+/**
+ *  Minimum height that will let user to resize
+ */
 @property (nonatomic) CGFloat minHeight;
+
+/**
+ *  Disables resize of the view
+ *  @default NO
+ */
+@property (nonatomic) BOOL disable;
+
+/**
+ *  Disables resize of the view if user use more than 1 finger.
+ *  @default NO
+ */
+@property (nonatomic) BOOL disableOnMultiTouch;
+/**
+ *  Defaults to YES. Disables the user from dragging the view outside the parent view's bounds.
+ */
 @property (nonatomic) BOOL preventsPositionOutsideSuperview;
+
+/**
+ *  Defines if pan is disabled.
+ *  @default NO
+ */
+@property (nonatomic) BOOL disablePan;
+
+/**
+ *  Defines the insent of the content.
+ *  Larger == better detection
+ */
+@property (nonatomic) float resizableInset;
+/**
+ *  Interactive border size
+ */
+@property (nonatomic) float interactiveBorderSize;
 ```
 	
 For an example of how to use SPUserResizableView, please see the included example project.

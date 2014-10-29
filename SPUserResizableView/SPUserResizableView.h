@@ -56,6 +56,7 @@ typedef struct SPUserResizableViewAnchorPoint {
  */
 @property (nonatomic, weak) UIView *contentView;
 
+#pragma mark - Setup properties
 /**
  *  Minimum width to let user resize
  *  @default Default is 48.0 for each.
@@ -139,6 +140,6 @@ typedef struct SPUserResizableViewAnchorPoint {
  *
  *  @param userResizableView
  */
-- (void)userResizableViewNewRealFrame:(SPUserResizableView *)userResizableView;;
+- (void)userResizableViewNewRealFrame:(SPUserResizableView *)userResizableView;
 
 @end
