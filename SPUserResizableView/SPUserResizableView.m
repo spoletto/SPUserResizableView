@@ -232,7 +232,7 @@ static SPUserResizableViewAnchorPoint SPUserResizableViewLowerMiddleAnchorPoint 
         return;
     }
     
-    NSLog(@"Touch point %@",NSStringFromCGPoint(touchPoint));
+    //NSLog(@"Touch point %@",NSStringFromCGPoint(touchPoint));
     // save current rotation and scales
     CGFloat scaleX      = [[self valueForKeyPath:@"layer.transform.scale.x"] floatValue];
     CGFloat scaleY      = [[self valueForKeyPath:@"layer.transform.scale.y"] floatValue];
@@ -243,7 +243,7 @@ static SPUserResizableViewAnchorPoint SPUserResizableViewLowerMiddleAnchorPoint 
     //NSLog(@"H %f, W %f, X %f, Y %f", anchorPoint.adjustsH, anchorPoint.adjustsW, anchorPoint.adjustsX, anchorPoint.adjustsY);
     
     
-    NSLog(@"Rotation %f",RADIANS_TO_DEGREES(rotation));
+    //NSLog(@"Rotation %f",RADIANS_TO_DEGREES(rotation));
     
     
     CGPoint point;
