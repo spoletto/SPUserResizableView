@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name         = 'SPUserResizableView+Pion'
-  s.version      = '0.5.3'
+  s.version      = '0.5.4'
   s.license      =  'MIT'
   s.homepage     = 'https://github.com/pionl/SPUserResizableView'
   s.authors      =  'Stephen Poletto'
@@ -8,7 +8,7 @@ Pod::Spec.new do |s|
 
 # Source Info
   s.platform     =  :ios, '5.0'
-  s.source       =  {:git => 'https://github.com/pionl/SPUserResizableView.git', :tag => '0.5.3'}
+  s.source       =  {:git => 'https://github.com/pionl/SPUserResizableView.git', :tag => '0.5.4'}
   s.source_files = 'SPUserResizableView/SPUserResizableView.{h,m}'
   s.requires_arc = true
   

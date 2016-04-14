@@ -326,12 +326,12 @@ static SPUserResizableViewAnchorPoint SPUserResizableViewLowerMiddleAnchorPoint 
     
     // (4) If the new frame is too small, cancel the changes.
     if (newWidth < self.minWidth) {
+        newX -= anchorPoint.adjustsX * (self.minWidth - newWidth);
         newWidth = self.minWidth;
-        newX = self.frame.origin.x;
     }
     if (newHeight < self.minHeight) {
+        newY -= anchorPoint.adjustsY * (self.minHeight - newHeight);
         newHeight = self.minHeight;
-        newY = self.frame.origin.y;
     }
     
     // (5) Ensure the resize won't cause the view to move offscreen.
