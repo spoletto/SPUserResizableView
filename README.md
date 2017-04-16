@@ -19,7 +19,7 @@ Include SPUserResizableView.h and SPUserResizableView.m in your project.
 You'll need to #import the SPUserResizableView.h header and construct a new instance of SPUserResizableView. Then, set the contentView on the SPUserResizableView to the view you'd like the user to interact with.
 
 ``` objective-c
-#import "SPUserResizableView.h"
+# import "SPUserResizableView.h"
 
 ...
     
